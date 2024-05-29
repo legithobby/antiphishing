@@ -3,7 +3,7 @@ Bash and powershell scripts for checking browser is connected to a known bank we
 
 ### Bash script:
 
-Bash script showbankconns.sh checks internet connections. In the beginning script blocks 2FA authentication by blocking wifi tablets access to internet. That wifi tablet is used for 2FA. Script starts to check internet connections from users PC. If it finds a connection to a known bank IP address it will enable 2FA and display a message box.
+Bash script showbankconns.sh checks internet connections. In the beginning script blocks payments by blocking 2FA payment authentication. This is done by blocking wifi tablets access to internet. That wifi tablet is used for payments 2FA. Script starts to check internet connections from users PC. If it finds a connection to a known bank IP address it will enable 2FA payment authentication and display a message box.
 
 ### Powershell script:
 
