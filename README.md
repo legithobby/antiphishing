@@ -13,3 +13,7 @@ Start powershell script from cmd prompt.
 For e.g.
 E:\data\powershell\antiphishing>powershell .\bankconns.ps1
 
+## License
+
+This project is licensed under the GNU General Public License version 3.0 (GPL 3.0). See the [LICENSE](LICENSE) file for details.
+
