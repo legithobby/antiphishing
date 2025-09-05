@@ -9,13 +9,17 @@ COMMANDS="nft -a list chain $TABLE $CHAIN | awk '/ip saddr ${WIFITAB_IP} drop /{
 
 RULENR=$(ssh -p $PORT $USER@$ROUTER "$COMMANDS")
 
+
 # Check if $RULENR is empty which means no nft rule was found
 if [ -z "$RULENR" ]
 then
   exit
 fi
 
-DELCOMMANDS="nft delete rule $TABLE $CHAIN handle $RULENR"
+DELCOMMANDS="nft delete rule $TABLE $CHAIN handle "
 
-ssh -p $PORT $USER@$ROUTER "$DELCOMMANDS"
+for rn in $RULENR; do
+  ssh -p $PORT $USER@$ROUTER "$DELCOMMANDS" $rn
+done
+
 

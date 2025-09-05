@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 bankaddrlist="./bankaddrlist.txt"
 
-# Block wifitable internet access
+# Block wifitablet internet access
 ./block2FA.sh
 
 newline=$'\n'
@@ -16,8 +16,10 @@ do
     do
       ipanddomain+="Domain name: $line   IP address: $iipee$newline"
     done
-  fi  
+  fi
 done < "$bankaddrlist"
+
+echo $bankipstring
 
 findinstring () {
   item=$1
@@ -29,8 +31,9 @@ findinstring () {
 while true
 do
   servers=$(ss -tn4 | tail -n +2 | grep -v '0.0.0.0' | awk '{print $5}' | cut -d ':' -f1 | sort | uniq)
+  #echo $servers
   for serv in $(echo $servers)
-  do 
+  do
     hit=''
     hit=$(findinstring $serv "$bankipstring")
     if [[ "$hit" != '' ]]
@@ -40,8 +43,8 @@ do
       infotxt=$( echo "$ipanddomain" | grep $hit )
       zenity --info --text="$infotxt" --title="Bank connection found"
       echo $infotxt
+      sleep 20
     fi
   done
   sleep 1
 done
-

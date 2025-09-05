@@ -15,10 +15,50 @@ function Resolve-DomainName {
   }
 }
 
+function PopupMessage {
+  param(
+    [string] $popupmessage
+  )
+
+   #Write-Host " $popupmessage"
+  
+   # Load the necessary assemblies for UI components
+   Add-Type -AssemblyName PresentationCore, PresentationFramework, System.Windows.Forms
+   
+   # Define the message box content
+   $msgBody = $popupmessage
+   $msgTitle = "Attention!"
+   $msgButton = [System.Windows.Forms.MessageBoxButtons]::OK
+   $msgImage = [System.Windows.Forms.MessageBoxIcon]::Information
+   
+   # Create a hidden form and set its 'TopMost' property to true
+   $onTopForm = New-Object System.Windows.Forms.Form
+   $onTopForm.Size = New-Object System.Drawing.Size(0,0) # Make the form invisible
+   $onTopForm.TopMost = $true
+   $onTopForm.ShowInTaskbar = $false # Don't show the form in the taskbar
+   $onTopForm.Show()
+   
+   # Display the message box using the hidden form as the owner
+   $Result = [System.Windows.Forms.MessageBox]::Show($onTopForm, $msgBody, $msgTitle, $msgButton, $msgImage)
+   
+   # Close the hidden form after the user interacts with the message box
+   $onTopForm.Close()
+
+}
+
+
 Add-Type -AssemblyName System.Speech
 $SpeechSynthesizer = New-Object -TypeName System.Speech.Synthesis.SpeechSynthesizer
 Add-Type -AssemblyName System.Speech
 #$SpeechSynthesizer.Speak('Hello, World!')
+
+function VoiceMessage {
+  param(
+    [string] $speechmsg
+  )
+    $SpeechSynthesizer.Speak($speechmsg)
+}
+
 
 while($true)
 {
@@ -44,6 +84,8 @@ foreach ($domainName in $domainNames) {
   }
 }
 
+
+
 if ($foundConnections.Count -gt 0) {
   Write-Host "Found active connections to the following domains:"
   $foundConnections | Format-Table RemoteAddress, RemotePort, DomainName
@@ -58,12 +100,12 @@ if ($foundConnections.Count -gt 0) {
     $speechmsgdata = " {0} " -f $connection.DomainName
   }
   Write-Host $speechmsgdata
-  $speechmsg = "Bank connection was found to $speechmsgdata"
-  $SpeechSynthesizer.Speak($speechmsg)
+  VoiceMessage "Bank connection was found to $speechmsgdata"
   $msgTitle = "Connection to bank ok"
   $msgButton = 'Ok'
   $msgImage = 'Question'
-  $Result = [System.Windows.MessageBox]::Show($msgBody,$msgTitle,$msgButton,$msgImage)
-
+  # $Result = [System.Windows.MessageBox]::Show($msgBody,$msgTitle,$msgButton,$msgImage)
+  PopupMessage $msgBody
+  Start-Sleep -Seconds 15
   } 
 }
